@@ -1,0 +1,145 @@
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US:en
+
+LOCALSOURCE="/Users/YXP/Desktop/workspace/StraightRental"
+PROJECT_DIR="${WORKSPACE}"
+
+cd $PROJECT_DIR
+
+rm -rf fastlane
+
+mkdir fastlane
+
+#cp $LOCALSOURCE/fastlane/Appfile $PROJECT_DIR/fastlane/
+#cp $LOCALSOURCE/fastlane/Fastfile $PROJECT_DIR/fastlane/
+#cp $LOCALSOURCE/fastlane/Pluginfile $PROJECT_DIR/fastlane/
+#cp $LOCALSOURCE/fastlane/README.md $PROJECT_DIR/fastlane/
+#cp $LOCALSOURCE/fastlane/report.xml $PROJECT_DIR/fastlane/
+#cp $LOCALSOURCE/Gemfile $PROJECT_DIR/
+
+#cp $PROJECT_DIR/StraightRental/Common/YXU_DefineServerAdhoc.h $PROJECT_DIR/StraightRental/Common/YXU_DefineServer.h 
+#cp $LOCALSOURCE/YXU_DefineAppName.h $PROJECT_DIR/StraightRental/Common/YXU_DefineAppName.h
+
+#git add .
+#git commit -m "MASSAGEFORCOMMITS"
+
+#rm -rf shellDir
+
+#mkdir shellDir
+#chmod -R 777 shellDir
+#cd shellDir
+#rm -rf .git
+
+#withOutGit="ShellRroject"
+#relatePath=".git"
+#gitPath="http://git.xin.com/ios_publib/"
+#get version first
+#appVersion="V9.3.3"
+
+#git clone http://git.xin.com/ios_publib/UMengPushDeprecated.git
+
+#cd UMengPushDeprecated
+
+#$gitPath$relatePath
+
+#----TEST
+#cp $LOCALSOURCE/fastlane/README.md $PROJECT_DIR/shellDir/
+#git init
+#git remote add origin $gitPath$relatePath
+#git add .
+#git commit -m "add README"
+#git push -u origin master
+#----TEST
+#sleep 2
+
+#dPath="delete the release"
+#aPath="add the release"
+
+#dTag=${appVersion}
+#if git rev-parse -q --verify "refs/tags/$dTag" >/dev/null; then
+#    echo "found"
+#    git tag -d ${appVersion}
+#    git push origin :refs/tags/${appVersion}
+#else
+#    echo "not found"
+#fi
+
+
+#git tag -a ${appVersion} -m "$aPath$appVersion"
+# -m "${appVersion}"
+#git pull
+#git push origin ${appVersion}
+
+project_name="YXP-iOS"
+
+plist=${PROJECT_DIR}/${project_name}/info.plist
+
+#get versionNum
+versionNum=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "${plist}")
+if [[ "${versionNum}" == "" ]]; then
+echo "No versionNum in $plist"
+exit 2
+fi
+
+echo "versionNum"
+echo $versionNum
+
+
+#get app version
+releaseFormat=""
+#"_release_tag"
+appVersion="${versionNum}${releaseFormat}"
+#"V9.4.0"
+publicPods=("UXIN_DebugBar" "UXIN_AFNetWork" "YXUEMManager" "UXIN_PlayerSDK" "YXU_Camera" "YXU_Pay" "YXShare" "YXU_AddressBook" "YX_Advertisement" "UXIN_FreeTrafficSijiSDK" "UXIN_StatisticsSDK" "UXIN_CommonConfigManager" "YXU_CommonConfig" "YXU_Shop" "UXIN_Hashids" "YXU_JSONModel" "UXIN_MJRefresh" "UX_BlocksKit" "YXPSwipeTableViewCell" "UXIN_ADTickerLabel" "UXIN_SVPullToRefresh" "UXIN_JDFlipNumberView" "UXIN_BannerView" "UXIN_Keychain" "UXIN_CommonTools" "YXNetwork" "YXCategory" "YXUIExtra" "YXU_UserDefault" "UXAPM" "GGChartKit" "UXINPanorama" "HyphenateLite_ARM" "IJKMediaFramework_ARM" "UXIN_Mediator" "UXIN_Router" "UXCacheManager" "UXWebImage" "UXAccountStore" "YXU_UIBase" "UXINIndexTableView" "UXIN_UIBase" "UXIN_Category" "UXIN_Extension" "YXU_PlayerSDK" "UXRouterUsedCarBridge" "UXIN_Refresh" "UXINSecurityKey" "UXINQuickLogin" "UXIN_Animation")
+
+rm -rf shellDir
+mkdir shellDir
+cd shellDir
+rm -rf .git
+    
+tryCount=0    
+
+for i in "${publicPods[@]}"
+do
+
+ withOutGit=$i
+ relatePath=".git"
+ gitPath="http://git.xin.com/ios_publib/"
+    #echo "$i"
+    
+    git clone $gitPath$withOutGit$relatePath
+    cd $i
+    
+    dPath="delete the release"
+ aPath="add the release tag "
+
+ dTag=${appVersion}
+ if git rev-parse -q --verify "refs/tags/$dTag" >/dev/null; then
+     echo "found"
+     git tag -d ${appVersion}
+     git push origin :refs/tags/${appVersion}
+ else
+     echo "not found"
+ fi
+
+
+ git tag -a ${appVersion} -m "$aPath$appVersion"
+ # -m "${appVersion}"
+ #git pull
+ git push origin ${appVersion}
+    #echo "                                   "
+    #echo "                                   "
+    tryCount=$[$tryCount+1]
+    #echo ${#publicPods[*]}
+    cd ..
+done
+
+if [ $tryCount == ${#publicPods[*]} ]
+then
+ echo "execute success"
+else
+ echo "execute fail"
+fi
+
+cd $PROJECT_DIR
+rm -rf shellDir
